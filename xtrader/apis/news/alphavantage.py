@@ -59,7 +59,6 @@ class AlphaVantageNewsSentimentAPI:
                       please contact support@alphavantage.co to have your limit boosted.
         """
 
-
         if sort not in NEWS_SENTIMENT_SORT_OPTIONS:
             raise ValueError(f"`sort` must be one of {NEWS_SENTIMENT_SORT_OPTIONS}")
         if limit > 1000:
