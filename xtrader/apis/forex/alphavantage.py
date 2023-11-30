@@ -19,7 +19,7 @@ class AlphaVantageForexAPI:
                               It can either be a physical currency or digital/crypto currency.
         :param to_currency:   The destination currency for the exchange rate. It can either be a physical currency or digital/crypto currency. 
         """
-        endpoint = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_currency}&to_currency={to_currency}&apikey={self.api_key}"
+        endpoint = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_symbol}&to_currency={to_symbol}&apikey={self.api_key}"
         return call_api(endpoint)
     
     

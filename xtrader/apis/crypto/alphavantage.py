@@ -12,20 +12,13 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
 
     def __init__(self, api_key):
         self.api_key = api_key
-
-
-    def call_api(self, endpoint: str) -> json:
-        response = requests.get(endpoint)
-        if response.status_code != 200:
-            raise ValueError(f'Invalid API response: {response}')
-        return response
     
 
-    def get_exchange_rate(self, from_currency: str, to_currency: str) -> json:
+    def get_exchange_rate(self, from_symbol: str, to_symbol: str) -> json:
         """ This API returns the realtime exchange rate for any pair of digital currency
           (e.g., Bitcoin) or physical currency (e.g., USD).
         """
-        endpoint = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_currency}&to_currency={to_currency}&apikey={self.api_key}"
+        endpoint = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_symbol}&to_currency={to_symbol}&apikey={self.api_key}"
         return call_api(endpoint)
     
 
