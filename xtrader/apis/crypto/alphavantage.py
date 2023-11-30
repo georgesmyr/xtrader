@@ -1,6 +1,7 @@
 import requests, json
 
 from xtrader.apis.crypto.base import BaseCryptoAPI
+from xtrader.utils import call_api
 
 OUTPUT_SIZES = ['compact', 'full']
 DATA_TYPES = ['json', 'csv']
@@ -25,7 +26,7 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
           (e.g., Bitcoin) or physical currency (e.g., USD).
         """
         endpoint = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_currency}&to_currency={to_currency}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_intraday(self, symbol: str, market: str, interval: str,
@@ -48,7 +49,7 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
             endpoint += '&datatype=csv'
         endpoint += f"&apikey={self.api_key}"
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_daily(self, symbol: str, market: str) -> json:
@@ -59,7 +60,7 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
         """
         endpoint = f"https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol={symbol}&market={market}&apikey={self.api_key}"
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
     
     def get_weekly(self, symbol: str, market: str) -> json:
@@ -69,7 +70,7 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
         Prices and volumes are quoted in both the market-specific currency and USD.
         """
         endpoint = f"https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_WEEKLY&symbol={symbol}&market={market}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_monthly(self, symbol: str, market: str) -> json:
@@ -79,4 +80,4 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
         Prices and volumes are quoted in both the market-specific currency and USD.
         """
         endpoint = f"https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_MONTHLY&symbol={symbol}&market={market}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
