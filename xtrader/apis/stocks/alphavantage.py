@@ -1,4 +1,5 @@
 import requests
+from xtrader.utils import call_api
 from xtrader.apis.stocks.base import BaseStockAPI
 
 OUTPUT_SIZES = ['compact', 'full']
@@ -9,13 +10,6 @@ class AlphaVantageStockAPI(BaseStockAPI):
 
     def __init__(self, api_key):
         self.api_key = api_key
-
-
-    def call_api(self, endpoint):
-        response = requests.get(endpoint)
-        if response.status_code != 200:
-            raise ValueError(f'Invalid API response: {response}')
-        return response
 
 
     def get_daily(self, symbol, adjusted=False, outputsize='compact', datatype='json'):
@@ -37,7 +31,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
             endpoint += '&datatype=csv'
         endpoint += f'&apikey={self.api_key}'
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_intraday(self, symbol, interval='5min', adjusted=True, extended_hours=True,
@@ -63,7 +57,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
             endpoint += '&datatype=csv'
         endpoint += f'&apikey={self.api_key}'
         
-        return self.call_api(endpoint)       
+        return call_api(endpoint)       
 
 
     def get_weekly(self, symbol, adjusted=False, datatype='json'):
@@ -80,7 +74,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
             endpoint += '&datatype=csv'
         endpoint += f'&apikey={self.api_key}'
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_monthly(self, symbol, adjusted=False, datatype='json'):
@@ -97,7 +91,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
             endpoint += '&datatype=csv'
         endpoint += f'&apikey={self.api_key}'
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def search_symbol(self, keywords, datatype='json'):
@@ -110,13 +104,13 @@ class AlphaVantageStockAPI(BaseStockAPI):
             endpoint += '&datatype=csv'
         endpoint += f'&apikey={self.api_key}'
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
     def global_market_status(self):
         """ Get the current global market status. """
         endpoint = f'https://www.alphavantage.co/query?function=MARKET_STATUS&apikey={self.api_key}'
         
-        return self.call_api(endpoint)
+        return call_api(endpoint)
 
 
     

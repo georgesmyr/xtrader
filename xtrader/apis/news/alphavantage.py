@@ -1,7 +1,8 @@
 import requests
 from typing import Optional
-
 from datetime import datetime
+
+from xtrader.utils import call_api
 
 NEWS_SENTIMENT_SORT_OPTIONS = ['LATEST', 'RELEVANCE']
 
@@ -16,14 +17,6 @@ class AlphaVantageNewsSentimentAPI:
 
     def __init__(self, api_key):
         self.api_key = api_key
-
-
-    def call_api(self, endpoint):
-        response = requests.get(endpoint)
-        if response.status_code != 200:
-            raise ValueError(f'Invalid API response: {response}')
-        return response
-
     
     def get_news_sentiment(self, symbol:Optional[str]=None, topics:Optional[str]=None,
                             time_from:Optional[str]=None, time_to:Optional[str]=None,
@@ -57,4 +50,4 @@ class AlphaVantageNewsSentimentAPI:
             endpoint += f"&sort=RELEVANCE"
         endpoint += f"&apikey={self.api_key}"
         
-        return self.call_api(endpoint)
+        return call_api(endpoint)

@@ -2,18 +2,13 @@ import requests, json
 from typing import Optional
 from datetime import datetime
 
+from xtrader.utils import call_api
+
 class AlphaVantageFundamentalsAPI:
 
     def __init__(self, api_key):
         self.api_key = api_key
 
-    
-    def call_api(self, endpoint: str) -> json:
-        response = requests.get(endpoint)
-        if response.status_code != 200:
-            raise ValueError(f'Invalid API response: {response}')
-        return response
-    
 
     def get_company_overview(self, symbol: str) -> json:
         """ 
@@ -21,7 +16,7 @@ class AlphaVantageFundamentalsAPI:
         Data is generally refreshed on the same day a company reports its latest earnings and financials. 
         """
         endpoint = f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={symbol}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_income_statement(self, symbol: str) -> json:
@@ -31,7 +26,7 @@ class AlphaVantageFundamentalsAPI:
         Data is generally refreshed on the same day a company reports its latest earnings and financials.
         """
         endpoint = f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={symbol}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
     
     def get_balance_sheet(self, symbol: str) -> json:
@@ -41,7 +36,7 @@ class AlphaVantageFundamentalsAPI:
         Data is generally refreshed on the same day a company reports its latest earnings and financials.
         """
         endpoint = f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={symbol}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_cash_flow(self, symbol: str) -> json:
@@ -51,7 +46,7 @@ class AlphaVantageFundamentalsAPI:
         Data is generally refreshed on the same day a company reports its latest earnings and financials.
         """
         endpoint = f"https://www.alphavantage.co/query?function=CASH_FLOW&symbol={symbol}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_earnings(self, symbol: str) -> json:
@@ -60,7 +55,7 @@ class AlphaVantageFundamentalsAPI:
         Quarterly data also includes analyst estimates and surprise metrics.
         """
         endpoint = f"https://www.alphavantage.co/query?function=EARNINGS&symbol={symbol}&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_listing_delisting_status(self, date: Optional[str]=None, state: Optional[str]='active') -> json:
@@ -88,7 +83,7 @@ class AlphaVantageFundamentalsAPI:
             endpoint += '&state=delisted'
         endpoint += f"&apikey={self.api_key}"
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_ipo_calendar(self) -> str:
@@ -96,7 +91,7 @@ class AlphaVantageFundamentalsAPI:
         Returns the initial public offering (IPO) and lockup expiration dates for US equity markets.
         """
         endpoint = f"https://www.alphavantage.co/query?function=IPO_CALENDAR&apikey={self.api_key}"
-        return self.call_api(endpoint)
+        return call_api(endpoint)
     
 
     def get_earnings_calendar(self, symbol: Optional[str]=None, horizon: Optional[str]='3month') -> json:
@@ -119,5 +114,5 @@ class AlphaVantageFundamentalsAPI:
             endpoint += f"&horizon={horizon}"
         endpoint += f"&apikey={self.api_key}"
 
-        return self.call_api(endpoint)
+        return call_api(endpoint)
         
