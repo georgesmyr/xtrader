@@ -21,9 +21,9 @@ class AlphaVantageStockAPI(BaseStockAPI):
     def get_daily(self, symbol, adjusted=False, outputsize='compact', datatype='json'):
         """ Get daily stock data for a given symbol. """
         if outputsize not in OUTPUT_SIZES:
-            raise ValueError(f'outputsize must be one of {OUTPUT_SIZES}')
+            raise ValueError(f'`outputsize` must be one of {OUTPUT_SIZES}')
         if datatype not in DATA_TYPES:
-            raise ValueError(f'datatype must be one of {DATA_TYPES}')
+            raise ValueError(f'`datatype` must be one of {DATA_TYPES}')
         
         if adjusted:
             function = 'TIME_SERIES_DAILY_ADJUSTED'
@@ -44,11 +44,11 @@ class AlphaVantageStockAPI(BaseStockAPI):
                     month=None, outputsize='compact', datatype='json'):
         """ Get intraday stock data for a given symbol."""
         if outputsize not in OUTPUT_SIZES:
-            raise ValueError(f'outputsize must be one of {OUTPUT_SIZES}')
+            raise ValueError(f'`outputsize` must be one of {OUTPUT_SIZES}')
         if datatype not in DATA_TYPES:
-            raise ValueError(f'datatype must be one of {DATA_TYPES}')
+            raise ValueError(f'`datatype` must be one of {DATA_TYPES}')
         if interval not in INTRADAY_INTERVALS:
-            raise ValueError(f'interval must be one of {INTRADAY_INTERVALS}')
+            raise ValueError(f'`interval` must be one of {INTRADAY_INTERVALS}')
         
         endpoint = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}'
         if month is not None:
