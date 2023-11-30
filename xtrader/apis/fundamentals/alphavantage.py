@@ -91,7 +91,7 @@ class AlphaVantageFundamentalsAPI:
         return self.call_api(endpoint)
     
 
-    def get_ipo_calendar(self) -> json:
+    def get_ipo_calendar(self) -> str:
         """
         Returns the initial public offering (IPO) and lockup expiration dates for US equity markets.
         """
