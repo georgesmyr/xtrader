@@ -1,5 +1,5 @@
 import requests
-from apis.stocks.base import BaseStockAPI
+from xtrader.apis.stocks.base import BaseStockAPI
 
 OUTPUT_SIZES = ['compact', 'full']
 DATA_TYPES = ['json', 'csv']
