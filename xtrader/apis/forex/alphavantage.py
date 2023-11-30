@@ -12,7 +12,7 @@ class AlphaVantageForexAPI:
         self.api_key = api_key
 
 
-    def get_exchange_rate(self, from_currency: str, to_currency: str) -> json:
+    def get_exchange_rate(self, from_symbol: str, to_symbol: str) -> json:
         """
         Returns the realtime exchange rate for a pair of digital currency (e.g., Bitcoin) and physical currency (e.g., USD).
         :param from_currency: The currency you would like to get the exchange rate for.
@@ -48,7 +48,7 @@ class AlphaVantageForexAPI:
         endpoint += f"&apikey={self.api_key}"
 
         return call_api(endpoint)
-    
+
 
     def get_daily(self, from_symbol: str, to_symbol: str, outputsize: str = 'compact', datatype: str = 'json') -> json:
         """ 
@@ -74,7 +74,7 @@ class AlphaVantageForexAPI:
     
 
     def get_weekly(self, from_symbol: str, to_symbol: str, datatype: str = 'json') -> json:
-        """ 
+        """
         Returns the weekly time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime.
         :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
         """
