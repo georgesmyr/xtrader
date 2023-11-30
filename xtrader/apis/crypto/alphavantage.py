@@ -58,7 +58,7 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
         Prices and volumes are quoted in both the market-specific currency and USD.
         """
         endpoint = f"https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol={symbol}&market={market}&apikey={self.api_key}"
-        return endpoint
+
         return self.call_api(endpoint)
     
     
