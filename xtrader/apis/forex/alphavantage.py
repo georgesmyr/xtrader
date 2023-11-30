@@ -1,10 +1,19 @@
 import requests, json
 from typing import Optional
+
+import pandas as pd
+
 from xtrader.utils import call_api
 
 OUTPUT_SIZES = ['compact', 'full']
 DATA_TYPES = ['json', 'csv']
 INTRADAY_INTERVALS = ['1min', '5min', '15min', '30min', '60min']
+
+def is_valid_symbol(symbol: str) -> bool:
+    """ Checks if the given symbol is valid, by checking if it's in the `forex_currency_list.csv` """
+    valid_symbols = pd.read_csv('forex_currency_list.csv')['currency code']
+    return symbol in valid_symbols.values
+
 
 class AlphaVantageForexAPI:
 
@@ -19,7 +28,12 @@ class AlphaVantageForexAPI:
                               It can either be a physical currency or digital/crypto currency.
         :param to_currency:   The destination currency for the exchange rate. It can either be a physical currency or digital/crypto currency. 
         """
+        if not is_valid_symbol(from_symbol):
+            raise ValueError(f"from_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
+        if not is_valid_symbol(to_symbol):
+            raise ValueError(f"to_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
         endpoint = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_symbol}&to_currency={to_symbol}&apikey={self.api_key}"
+        
         return call_api(endpoint)
     
     
@@ -33,6 +47,11 @@ class AlphaVantageForexAPI:
                            The `compact` option is recommended if you would like to reduce the data size of each API call.
         :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
         """
+
+        if not is_valid_symbol(from_symbol):
+            raise ValueError(f"from_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
+        if not is_valid_symbol(to_symbol):
+            raise ValueError(f"to_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
         if interval not in INTRADAY_INTERVALS:
             raise ValueError(f"interval must be one of {INTRADAY_INTERVALS}")
         if outputsize not in OUTPUT_SIZES:
@@ -58,6 +77,10 @@ class AlphaVantageForexAPI:
         :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
         """
 
+        if not is_valid_symbol(from_symbol):
+            raise ValueError(f"from_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
+        if not is_valid_symbol(to_symbol):
+            raise ValueError(f"to_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
         if outputsize not in OUTPUT_SIZES:
             raise ValueError(f"outputsize must be one of {OUTPUT_SIZES}")
         if datatype not in DATA_TYPES:
@@ -79,6 +102,10 @@ class AlphaVantageForexAPI:
         :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
         """
 
+        if not is_valid_symbol(from_symbol):
+            raise ValueError(f"from_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
+        if not is_valid_symbol(to_symbol):
+            raise ValueError(f"to_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
         if datatype not in DATA_TYPES:
             raise ValueError(f"datatype must be one of {DATA_TYPES}")
         
@@ -96,6 +123,10 @@ class AlphaVantageForexAPI:
         :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
         """
 
+        if not is_valid_symbol(from_symbol):
+            raise ValueError(f"from_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
+        if not is_valid_symbol(to_symbol):
+            raise ValueError(f"to_symbol is not a valid symbol. use AlphaVantageForexAPI.get_currency_list() to get a list of valid symbols")
         if datatype not in DATA_TYPES:
             raise ValueError(f"datatype must be one of {DATA_TYPES}")
         
