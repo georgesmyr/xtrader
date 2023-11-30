@@ -27,7 +27,6 @@ class AlphaVantageForexAPI:
                     outputsize: str = 'compact', datatype: str = 'json') -> json:
         """
         Returns intraday time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime.
-        
         :param interval: Time interval between two consecutive data points in the time series.
                          The following values are supported: 1min, 5min, 15min, 30min, 60min
         :param outputsize: `compact` returns only the latest 100 data points in the intraday time series;`full` returns the full-length intraday time series. 
@@ -52,7 +51,12 @@ class AlphaVantageForexAPI:
     
 
     def get_daily(self, from_symbol: str, to_symbol: str, outputsize: str = 'compact', datatype: str = 'json') -> json:
-        """ Returns the daily time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime."""
+        """ 
+        Returns the daily time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime.
+        :param outputsize: `compact` returns only the latest 100 data points in the intraday time series;`full` returns the full-length intraday time series. 
+                           The `compact` option is recommended if you would like to reduce the data size of each API call.
+        :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
+        """
 
         if outputsize not in OUTPUT_SIZES:
             raise ValueError(f"outputsize must be one of {OUTPUT_SIZES}")
@@ -70,7 +74,10 @@ class AlphaVantageForexAPI:
     
 
     def get_weekly(self, from_symbol: str, to_symbol: str, datatype: str = 'json') -> json:
-        """ Returns the weekly time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime."""
+        """ 
+        Returns the weekly time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime.
+        :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
+        """
 
         if datatype not in DATA_TYPES:
             raise ValueError(f"datatype must be one of {DATA_TYPES}")
@@ -84,7 +91,10 @@ class AlphaVantageForexAPI:
     
 
     def get_monthly(self, from_symbol: str, to_symbol: str, datatype: str = 'json') -> json:
-        """ Returns the monthly time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime."""
+        """ 
+        Returns the monthly time series (timestamp, open, high, low, close) of the FX currency pair specified, updated realtime.
+        :param datatype: `json` returns the intraday time series in JSON format; `csv` returns the time series as a CSV (comma separated value) file.
+        """
 
         if datatype not in DATA_TYPES:
             raise ValueError(f"datatype must be one of {DATA_TYPES}")
