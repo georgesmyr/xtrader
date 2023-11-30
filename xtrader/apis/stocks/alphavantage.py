@@ -13,7 +13,17 @@ class AlphaVantageStockAPI(BaseStockAPI):
 
 
     def get_daily(self, symbol, adjusted=False, outputsize='compact', datatype='json'):
-        """ Get daily stock data for a given symbol. """
+        """ 
+        Get daily stock data for a given symbol.
+        
+        :param outputsize: By default, outputsize=compact. Strings compact and full are accepted with the following
+                            specifications: compact returns only the latest 100 data points; full returns the full-length
+                            time series of 20+ years of historical data. The "compact" option is recommended if you would 
+                            like to reduce the data size of each API call.
+        :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
+                         json returns the daily time series in JSON format; csv returns the time series as a CSV
+                         (comma separated value) file.
+        """
         if outputsize not in OUTPUT_SIZES:
             raise ValueError(f'`outputsize` must be one of {OUTPUT_SIZES}')
         if datatype not in DATA_TYPES:
@@ -36,7 +46,17 @@ class AlphaVantageStockAPI(BaseStockAPI):
 
     def get_intraday(self, symbol, interval='5min', adjusted=True, extended_hours=True,
                     month=None, outputsize='compact', datatype='json'):
-        """ Get intraday stock data for a given symbol."""
+        """ 
+        Get intraday stock data for a given symbol.
+        
+        :param outputsize: By default, outputsize=compact. Strings compact and full are accepted with the following
+                            specifications: compact returns only the latest 100 data points; full returns the full-length
+                            time series of 20+ years of historical data. The "compact" option is recommended if you would 
+                            like to reduce the data size of each API call.
+        :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
+                         json returns the daily time series in JSON format; csv returns the time series as a CSV
+                         (comma separated value) file.
+        """
         if outputsize not in OUTPUT_SIZES:
             raise ValueError(f'`outputsize` must be one of {OUTPUT_SIZES}')
         if datatype not in DATA_TYPES:
@@ -61,7 +81,17 @@ class AlphaVantageStockAPI(BaseStockAPI):
 
 
     def get_weekly(self, symbol, adjusted=False, datatype='json'):
-        """ Get weekly stock data for a given symbol."""
+        """ 
+        Get weekly stock data for a given symbol.
+
+        :param outputsize: By default, outputsize=compact. Strings compact and full are accepted with the following
+                            specifications: compact returns only the latest 100 data points; full returns the full-length
+                            time series of 20+ years of historical data. The "compact" option is recommended if you would 
+                            like to reduce the data size of each API call.
+        :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
+                         json returns the daily time series in JSON format; csv returns the time series as a CSV
+                         (comma separated value) file.
+        """
         if datatype not in DATA_TYPES:
             raise ValueError(f'datatype must be one of {DATA_TYPES}')
         if adjusted:
@@ -78,7 +108,13 @@ class AlphaVantageStockAPI(BaseStockAPI):
     
 
     def get_monthly(self, symbol, adjusted=False, datatype='json'):
-        """ Get monthly stock data for a given symbol."""
+        """ 
+        Get monthly stock data for a given symbol.
+
+       :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
+                        json returns the weekly time series in JSON format; csv returns the time series as a CSV
+                        (comma separated value) file.
+        """
         if datatype not in DATA_TYPES:
             raise ValueError(f'datatype must be one of {DATA_TYPES}')
         if adjusted:
