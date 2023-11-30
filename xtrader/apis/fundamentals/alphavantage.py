@@ -99,7 +99,7 @@ class AlphaVantageFundamentalsAPI:
         return self.call_api(endpoint)
     
 
-    def get_earnings_calendar(self, symbol: Optional[str]=None, horizon: Optional[str]='3months') -> json:
+    def get_earnings_calendar(self, symbol: Optional[str]=None, horizon: Optional[str]='3month') -> json:
         """
         Returns a list of company earnings expected in the next 3, 6, or 12 months.
 
@@ -109,7 +109,8 @@ class AlphaVantageFundamentalsAPI:
         :param horizon: By default, horizon=3month and the API will return a list of expected company earnings in the next 3 months.
                         You may set horizon=6month or horizon=12month to query the earnings scheduled for the next 6 months or 12 months, respectively.
         """
-        if horizon not in ['3month', '6month', '12month']:
+        HORIZONS = ['3month', '6month', '12month']
+        if horizon not in HORIZONS:
             raise ValueError(f'`horizon` must be one of: {horizon}')
         endpoint = f"https://www.alphavantage.co/query?function=EARNINGS_CALENDAR"
         if symbol:
