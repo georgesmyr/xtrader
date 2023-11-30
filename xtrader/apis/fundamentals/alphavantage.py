@@ -76,13 +76,13 @@ class AlphaVantageFundamentalsAPI:
         """
         if state not in ['active', 'delisted']:
             raise ValueError(f'`state` must be one of: {state}')
-        try:
-            datetime.strptime(date, '%Y-%m-%d')
-        except:
-            raise ValueError(f'`date` must be in YYYY-MM-DD format: {date}')
         
         endpoint = f"https://www.alphavantage.co/query?function=LISTING_STATUS"
         if date is not None:
+            try:
+                datetime.strptime(date, '%Y-%m-%d')
+            except:
+                raise ValueError(f'`date` must be in YYYY-MM-DD format: {date}')
             endpoint += f"&date={date}"
         if state == 'delisted':
             endpoint += '&state=delisted'
