@@ -1,3 +1,3 @@
-from xtrader.apis import stocks
+from xtrader import apis
 
-__all__ = ['stocks']
+__all__ = ['apis']
