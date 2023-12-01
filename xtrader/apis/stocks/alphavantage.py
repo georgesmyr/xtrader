@@ -52,7 +52,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
             raise ValueError(f'`interval` must be one of {INTRADAY_INTERVALS}')
         
         params = {'function': 'TIME_SERIES_INTRADAY', 'symbol': symbol, 'interval': interval, 'month': month,
-                  'adjusted': adjusted, 'extended_hours': extended_hours, 'outputsize': outputsize}
+                  'adjusted': adjusted, 'extended_hours': extended_hours, 'outputsize': outputsize, 'apikey': self.api_key}
         
         return call_api(base_url=BASE_URL, params=params)       
 
