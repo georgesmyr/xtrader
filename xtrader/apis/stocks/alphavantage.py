@@ -91,7 +91,6 @@ class AlphaVantageStockAPI(BaseStockAPI):
         return AV_OHLC_response_format(response, 'Monthly Time Series')
 
     
-
     def search_symbol(self, keywords):
         """ Search for a symbol based on keywords. """""
         params = {'function': 'SYMBOL_SEARCH', 'keywords': keywords, 'apikey': self.api_key}
