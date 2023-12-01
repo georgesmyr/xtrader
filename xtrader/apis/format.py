@@ -1,7 +1,7 @@
 import pandas as pd
 from typing import Any
 
-def AV_OHLC_response_format(response: Any, data_key) -> pd.DataFrame:
+def AV_OHLC_response_format(response: Any, data_key: str) -> pd.DataFrame:
     """ 
     Receives the AlphaVantage response, handles errors
     and returns a DataFrame with OHLC format
