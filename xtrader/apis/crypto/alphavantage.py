@@ -1,4 +1,4 @@
-import requests
+import pandas as pd
 from typing import Any
 
 from xtrader.apis.crypto.base import BaseCryptoAPI
