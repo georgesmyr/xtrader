@@ -1,7 +1,7 @@
 import requests
 
-def call_api(endpoint: str):
-        response = requests.get(endpoint)
-        if response.status_code != 200:
-            raise ValueError(f'Invalid API response: {response}')
+def call_api(base_url: str, params: dict):
+        """ Requests data from the API and returns the response."""
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()
         return response
