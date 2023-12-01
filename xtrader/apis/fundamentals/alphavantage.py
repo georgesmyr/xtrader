@@ -1,8 +1,10 @@
-import requests, json
-from typing import Optional
+import requests
+from typing import Optional, Any
 from datetime import datetime
 
 from xtrader.utils import call_api
+
+BASE_URL = 'https://www.alphavantage.co/query?'
 
 class AlphaVantageFundamentalsAPI:
 
@@ -10,55 +12,55 @@ class AlphaVantageFundamentalsAPI:
         self.api_key = api_key
 
 
-    def get_company_overview(self, symbol: str) -> json:
+    def get_company_overview(self, symbol: str) -> Any:
         """ 
         Returns the company information, financial ratios, and other key metrics for the equity specified.
         Data is generally refreshed on the same day a company reports its latest earnings and financials. 
         """
-        endpoint = f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={symbol}&apikey={self.api_key}"
-        return call_api(endpoint)
+        params = {'function': 'OVERVIEW', 'symbol': symbol, 'apikey': self.api_key}
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def get_income_statement(self, symbol: str) -> json:
+    def get_income_statement(self, symbol: str) -> Any:
         """
         Returns the annual and quarterly income statements for the company of interest,
         with normalized fields mapped to GAAP and IFRS taxonomies of the SEC.
         Data is generally refreshed on the same day a company reports its latest earnings and financials.
         """
-        endpoint = f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={symbol}&apikey={self.api_key}"
-        return call_api(endpoint)
+        params = {'function': 'INCOME_STATEMENT', 'symbol': symbol, 'apikey': self.api_key}
+        return call_api(base_url=BASE_URL, params=params)
     
     
-    def get_balance_sheet(self, symbol: str) -> json:
+    def get_balance_sheet(self, symbol: str) -> Any:
         """
         Returns the annual and quarterly balance sheets for the company of interest,
         with normalized fields mapped to GAAP and IFRS taxonomies of the SEC.
         Data is generally refreshed on the same day a company reports its latest earnings and financials.
         """
-        endpoint = f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={symbol}&apikey={self.api_key}"
-        return call_api(endpoint)
+        params = {'function': 'BALANCE_SHEET', 'symbol': symbol, 'apikey': self.api_key}
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def get_cash_flow(self, symbol: str) -> json:
+    def get_cash_flow(self, symbol: str) -> Any:
         """
         Returns the annual and quarterly cash flows for the company of interest,
         with normalized fields mapped to GAAP and IFRS taxonomies of the SEC.
         Data is generally refreshed on the same day a company reports its latest earnings and financials.
         """
-        endpoint = f"https://www.alphavantage.co/query?function=CASH_FLOW&symbol={symbol}&apikey={self.api_key}"
-        return call_api(endpoint)
+        params = {'function': 'CASH_FLOW', 'symbol': symbol, 'apikey': self.api_key}
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def get_earnings(self, symbol: str) -> json:
+    def get_earnings(self, symbol: str) -> Any:
         """
         Returns the annual and quarterly earnings (EPS) for the company of interest.
         Quarterly data also includes analyst estimates and surprise metrics.
         """
-        endpoint = f"https://www.alphavantage.co/query?function=EARNINGS&symbol={symbol}&apikey={self.api_key}"
-        return call_api(endpoint)
+        params = {'function': 'EARNINGS', 'symbol': symbol, 'apikey': self.api_key}
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def get_listing_delisting_status(self, date: Optional[str]=None, state: Optional[str]='active') -> json:
+    def get_listing_delisting_status(self, date: Optional[str]=None, state: str='active') -> Any:
         """
         Returns a list of active or delisted US stocks and ETFs, either as of the latest trading day or at a specific time in history.
         The endpoint is positioned to facilitate equity research on asset lifecycle and survivorship.
@@ -72,29 +74,19 @@ class AlphaVantageFundamentalsAPI:
         if state not in ['active', 'delisted']:
             raise ValueError(f'`state` must be one of: {state}')
         
-        endpoint = f"https://www.alphavantage.co/query?function=LISTING_STATUS"
-        if date is not None:
-            try:
-                datetime.strptime(date, '%Y-%m-%d')
-            except:
-                raise ValueError(f'`date` must be in YYYY-MM-DD format: {date}')
-            endpoint += f"&date={date}"
-        if state == 'delisted':
-            endpoint += '&state=delisted'
-        endpoint += f"&apikey={self.api_key}"
-
-        return call_api(endpoint)
+        params = {'function': 'LISTING_STATUS', 'state': state, 'apikey': self.api_key}
+        if date:
+            params['date'] = date
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_ipo_calendar(self) -> str:
-        """
-        Returns the initial public offering (IPO) and lockup expiration dates for US equity markets.
-        """
-        endpoint = f"https://www.alphavantage.co/query?function=IPO_CALENDAR&apikey={self.api_key}"
-        return call_api(endpoint)
+        """ Returns the initial public offering (IPO) and lockup expiration dates for US equity markets. """
+        params = {'function': 'IPO_CALENDAR', 'apikey': self.api_key}
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def get_earnings_calendar(self, symbol: Optional[str]=None, horizon: Optional[str]='3month') -> json:
+    def get_earnings_calendar(self, symbol: Optional[str] = None, horizon: str = '3month') -> Any:
         """
         Returns a list of company earnings expected in the next 3, 6, or 12 months.
 
@@ -107,12 +99,9 @@ class AlphaVantageFundamentalsAPI:
         HORIZONS = ['3month', '6month', '12month']
         if horizon not in HORIZONS:
             raise ValueError(f'`horizon` must be one of: {horizon}')
-        endpoint = f"https://www.alphavantage.co/query?function=EARNINGS_CALENDAR"
-        if symbol:
-            endpoint += f"&symbol={symbol}"
-        if horizon:
-            endpoint += f"&horizon={horizon}"
-        endpoint += f"&apikey={self.api_key}"
 
-        return call_api(endpoint)
+        params = {'function': 'EARNINGS_CALENDAR', 'horizon': horizon, 'apikey': self.api_key}
+        if symbol:
+            params['symbol'] = symbol
+        return call_api(base_url=BASE_URL, params=params)
         

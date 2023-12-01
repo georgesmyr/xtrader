@@ -1,18 +1,21 @@
 import requests
+from typing import Any, Optional
+
 from xtrader.utils import call_api
 from xtrader.apis.stocks.base import BaseStockAPI
 
+BASE_URL = 'https://www.alphavantage.co/query?'
 OUTPUT_SIZES = ['compact', 'full']
-DATA_TYPES = ['json', 'csv']
 INTRADAY_INTERVALS = ['1min', '5min', '15min', '30min', '60min']
 
 class AlphaVantageStockAPI(BaseStockAPI):  
 
     def __init__(self, api_key):
+        """ Initialize the API object with AlphaVantage API key."""
         self.api_key = api_key
 
 
-    def get_daily(self, symbol, adjusted=False, outputsize='compact', datatype='json'):
+    def get_daily(self, symbol, adjusted: bool = False, outputsize: str = 'compact') -> Any:
         """ 
         Get daily stock data for a given symbol.
         
@@ -20,32 +23,21 @@ class AlphaVantageStockAPI(BaseStockAPI):
                             specifications: compact returns only the latest 100 data points; full returns the full-length
                             time series of 20+ years of historical data. The "compact" option is recommended if you would 
                             like to reduce the data size of each API call.
-        :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
-                         json returns the daily time series in JSON format; csv returns the time series as a CSV
-                         (comma separated value) file.
         """
         if outputsize not in OUTPUT_SIZES:
             raise ValueError(f'`outputsize` must be one of {OUTPUT_SIZES}')
-        if datatype not in DATA_TYPES:
-            raise ValueError(f'`datatype` must be one of {DATA_TYPES}')
         
         if adjusted:
             function = 'TIME_SERIES_DAILY_ADJUSTED'
         else:
             function = 'TIME_SERIES_DAILY'
+        params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
 
-        endpoint = f'https://www.alphavantage.co/query?function={function}&symbol={symbol}'
-        if outputsize == 'full':
-            endpoint += '&outputsize=full'
-        if datatype == 'csv':
-            endpoint += '&datatype=csv'
-        endpoint += f'&apikey={self.api_key}'
-
-        return call_api(endpoint)
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def get_intraday(self, symbol, interval='5min', adjusted=True, extended_hours=True,
-                    month=None, outputsize='compact', datatype='json'):
+    def get_intraday(self, symbol: str, interval: str = '5min', adjusted: bool = True, 
+                     extended_hours: bool = True, month:Optional[str]=None, outputsize='compact') -> Any:
         """ 
         Get intraday stock data for a given symbol.
         
@@ -53,34 +45,19 @@ class AlphaVantageStockAPI(BaseStockAPI):
                             specifications: compact returns only the latest 100 data points; full returns the full-length
                             time series of 20+ years of historical data. The "compact" option is recommended if you would 
                             like to reduce the data size of each API call.
-        :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
-                         json returns the daily time series in JSON format; csv returns the time series as a CSV
-                         (comma separated value) file.
         """
         if outputsize not in OUTPUT_SIZES:
             raise ValueError(f'`outputsize` must be one of {OUTPUT_SIZES}')
-        if datatype not in DATA_TYPES:
-            raise ValueError(f'`datatype` must be one of {DATA_TYPES}')
         if interval not in INTRADAY_INTERVALS:
             raise ValueError(f'`interval` must be one of {INTRADAY_INTERVALS}')
         
-        endpoint = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}'
-        if month is not None:
-            endpoint += f'&month={month}'
-        if not adjusted:
-            endpoint += '&adjusted=false'
-        if not extended_hours:
-            endpoint += '&extended_hours=false'
-        if outputsize == 'full':
-            endpoint += '&outputsize=full'
-        if datatype == 'csv':
-            endpoint += '&datatype=csv'
-        endpoint += f'&apikey={self.api_key}'
+        params = {'function': 'TIME_SERIES_INTRADAY', 'symbol': symbol, 'interval': interval, 'month': month,
+                  'adjusted': adjusted, 'extended_hours': extended_hours, 'outputsize': outputsize}
         
-        return call_api(endpoint)       
+        return call_api(base_url=BASE_URL, params=params)       
 
 
-    def get_weekly(self, symbol, adjusted=False, datatype='json'):
+    def get_weekly(self, symbol: str, adjusted: bool = False) -> Any:
         """ 
         Get weekly stock data for a given symbol.
 
@@ -88,65 +65,36 @@ class AlphaVantageStockAPI(BaseStockAPI):
                             specifications: compact returns only the latest 100 data points; full returns the full-length
                             time series of 20+ years of historical data. The "compact" option is recommended if you would 
                             like to reduce the data size of each API call.
-        :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
-                         json returns the daily time series in JSON format; csv returns the time series as a CSV
-                         (comma separated value) file.
         """
-        if datatype not in DATA_TYPES:
-            raise ValueError(f'datatype must be one of {DATA_TYPES}')
         if adjusted:
             function = 'TIME_SERIES_WEEKLY_ADJUSTED'
         else:
             function = 'TIME_SERIES_WEEKLY'
+        params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
 
-        endpoint = f'https://www.alphavantage.co/query?function={function}&symbol={symbol}'
-        if datatype == 'csv':
-            endpoint += '&datatype=csv'
-        endpoint += f'&apikey={self.api_key}'
-
-        return call_api(endpoint)
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def get_monthly(self, symbol, adjusted=False, datatype='json'):
-        """ 
-        Get monthly stock data for a given symbol.
-
-       :param datatype: By default, datatype=json. Strings json and csv are accepted with the following specifications:
-                        json returns the weekly time series in JSON format; csv returns the time series as a CSV
-                        (comma separated value) file.
-        """
-        if datatype not in DATA_TYPES:
-            raise ValueError(f'datatype must be one of {DATA_TYPES}')
+    def get_monthly(self, symbol: str, adjusted: bool = False):
+        """ Get monthly stock data for a given symbol. """
         if adjusted:
             function = 'TIME_SERIES_MONTHLY_ADJUSTED'
         else:
             function = 'TIME_SERIES_MONTHLY'
+        params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
 
-        endpoint = f'https://www.alphavantage.co/query?function={function}&symbol={symbol}'
-        if datatype == 'csv':
-            endpoint += '&datatype=csv'
-        endpoint += f'&apikey={self.api_key}'
-
-        return call_api(endpoint)
+        return call_api(base_url=BASE_URL, params=params)
     
 
-    def search_symbol(self, keywords, datatype='json'):
+    def search_symbol(self, keywords):
         """ Search for a symbol based on keywords. """""
-        if datatype not in DATA_TYPES:
-            raise ValueError(f'datatype must be one of {DATA_TYPES}')
-        
-        endpoint = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={keywords}'
-        if datatype == 'csv':
-            endpoint += '&datatype=csv'
-        endpoint += f'&apikey={self.api_key}'
-
-        return call_api(endpoint)
+        params = {'function': 'SYMBOL_SEARCH', 'keywords': keywords, 'apikey': self.api_key}
+        return call_api(base_url=BASE_URL, params=params)
     
     def global_market_status(self):
         """ Get the current global market status. """
-        endpoint = f'https://www.alphavantage.co/query?function=MARKET_STATUS&apikey={self.api_key}'
-        
-        return call_api(endpoint)
+        params = {'function': 'MARKET_STATUS', 'apikey': self.api_key}  
+        return call_api(base_url=BASE_URL, params=params)
 
 
     

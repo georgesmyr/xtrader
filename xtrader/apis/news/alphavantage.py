@@ -4,6 +4,7 @@ from datetime import datetime
 
 from xtrader.utils import call_api
 
+BASE_URL = 'https://www.alphavantage.co/query?'
 NEWS_SENTIMENT_SORT_OPTIONS = ['LATEST', 'RELEVANCE']
 
 def is_valid_time_format(input_string):
@@ -64,21 +65,14 @@ class AlphaVantageNewsSentimentAPI:
         if limit > 1000:
             raise ValueError(f"`limit` must be less than 1000")
         
-        endpoint = "https://www.alphavantage.co/query?function=NEWS_SENTIMENT"
+        params = {'function': 'NEWS_SENTIMENT', 'limit': limit, 'sort': sort, 'apikey': self.api_key}
         if symbols is not None:
-            endpoint += f"&symbol={symbols}"
+            params['symbols'] = symbols
         if topics is not None:
-            endpoint += f"&topics={topics}"
+            params['topics'] = topics
         if time_from is not None:
-            if not is_valid_time_format(time_from):
-                raise ValueError(f"`time_from` must be in the format YYYYMMDDTHHMM")
-            endpoint += f"&time_from={time_from}"
+            params['symbols'] = symbols
             if time_to is not None:
-                if not is_valid_time_format(time_to):
-                    raise ValueError(f"`time_to` must be in the format YYYYMMDDTHHMM")
-                endpoint += f"&time_to={time_to}"
-        if sort == 'RELEVANCE':
-            endpoint += f"&sort=RELEVANCE"
-        endpoint += f"&apikey={self.api_key}"
+                params['time_to'] = time_to
         
-        return call_api(endpoint)
+        return call_api(base_url=BASE_URL, params=params)
