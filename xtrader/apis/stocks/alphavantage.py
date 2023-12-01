@@ -2,6 +2,7 @@ import requests
 from typing import Any, Optional
 
 from xtrader.utils import call_api
+from xtrader.apis.format import AV_OHLC_response_format
 from xtrader.apis.stocks.base import BaseStockAPI
 
 BASE_URL = 'https://www.alphavantage.co/query?'
@@ -32,9 +33,10 @@ class AlphaVantageStockAPI(BaseStockAPI):
         else:
             function = 'TIME_SERIES_DAILY'
         params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
+        response = call_api(base_url=BASE_URL, params=params).json()
+        
+        return AV_OHLC_response_format(response, 'Time Series (Daily)')
 
-        return call_api(base_url=BASE_URL, params=params)
-    
 
     def get_intraday(self, symbol: str, interval: str = '5min', adjusted: bool = True, 
                      extended_hours: bool = True, month:Optional[str]=None, outputsize='compact') -> Any:
@@ -53,8 +55,9 @@ class AlphaVantageStockAPI(BaseStockAPI):
         
         params = {'function': 'TIME_SERIES_INTRADAY', 'symbol': symbol, 'interval': interval, 'month': month,
                   'adjusted': adjusted, 'extended_hours': extended_hours, 'outputsize': outputsize, 'apikey': self.api_key}
+        response = call_api(base_url=BASE_URL, params=params).json()
         
-        return call_api(base_url=BASE_URL, params=params)       
+        return AV_OHLC_response_format(response, f'Time Series ({interval})')  
 
 
     def get_weekly(self, symbol: str, adjusted: bool = False) -> Any:
@@ -71,8 +74,9 @@ class AlphaVantageStockAPI(BaseStockAPI):
         else:
             function = 'TIME_SERIES_WEEKLY'
         params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
+        response = call_api(base_url=BASE_URL, params=params).json()
 
-        return call_api(base_url=BASE_URL, params=params)
+        return AV_OHLC_response_format(response, 'Weekly Time Series')
     
 
     def get_monthly(self, symbol: str, adjusted: bool = False):
@@ -82,8 +86,10 @@ class AlphaVantageStockAPI(BaseStockAPI):
         else:
             function = 'TIME_SERIES_MONTHLY'
         params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
+        response = call_api(base_url=BASE_URL, params=params).json()
 
-        return call_api(base_url=BASE_URL, params=params)
+        return AV_OHLC_response_format(response, 'Monthly Time Series')
+
     
 
     def search_symbol(self, keywords):
