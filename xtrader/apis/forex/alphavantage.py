@@ -10,7 +10,7 @@ INTRADAY_INTERVALS = ['1min', '5min', '15min', '30min', '60min']
 
 def is_valid_symbol(symbol: str) -> bool:
     """ Checks if the given symbol is valid, by checking if it's in the `forex_currency_list.csv` """
-    valid_symbols = pd.read_csv('forex_currency_list.csv')['currency code']
+    valid_symbols = pd.read_csv('apis/forex/forex_currency_list.csv')['currency code']
     return symbol in valid_symbols.values
 
 
