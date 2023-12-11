@@ -1,2 +1,1 @@
-.conda/
-api_keys.json
+config.toml
