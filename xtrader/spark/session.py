@@ -3,7 +3,7 @@ import sys
 import toml
 
 # Typing 
-import collections.abc
+from collections.abc import Mapping
 from typing import Union, Optional, Tuple
 from os import PathLike
 
@@ -31,7 +31,7 @@ class Session:
 
 
     @staticmethod
-    def _merge_config(current: collections.abc.Mapping, file: Union[PathLike, str]) -> Tuple[dict, str]:
+    def _merge_config(current: Mapping, file: Union[PathLike, str]) -> Tuple[Mapping, Optional[PathLike]]:
         """
         Finds the path of the configuration file and merges it with the current configuration.
         If the file is None, then the current configuration is returned.
@@ -56,8 +56,8 @@ class Session:
         Finds the full path of a configuration file.
 
         If the file is already an absolute path then this method will only check if the file exists.
-        Otherwise, if the file is a relative path then this method will check if the file exists in the current working directory
-        (and all subdirectories) as well as on the system path(s).
+        Otherwise, if the file is a relative path then this method will check if the file exists in the current
+        working directory (and all subdirectories) as well as on the system path(s).
 
         :param file: Filename or path to the configuration file
         :return: An absolute path to the filename, or None if it cannot be found.
@@ -80,7 +80,7 @@ class Session:
         
 
     @staticmethod
-    def _merge_config_dicts(current: collections.abc.Mapping, update: collections.abc.Mapping, overwrite: bool = True):
+    def _merge_config_dicts(current: Mapping, update: Mapping, overwrite: bool = True) -> Mapping:
         """
         Merges two dictionaries recursively. This will overwrite keys from 'update' to 'current' unless
         the ovewrite parameter is set to False.
@@ -92,8 +92,8 @@ class Session:
         """
         for key, value in update.items():
             if key in current:
-                if isinstance(current[key], collections.abc.Mapping) and isinstance(value, collections.abc.Mapping):
-                    current[key] = Session._merge_config(current[key], value)
+                if isinstance(current[key], Mapping) and isinstance(value, Mapping):
+                    current[key] = Session._merge_config_dicts(current[key], value)
                 elif overwrite:
                     current[key] = value
             else:
