@@ -39,17 +39,19 @@ class SparkConnect:
         self._spark, self._dbutils = None, None
 
     @classmethod
-    def from_toml(cls,
-                  config_file: Optional[Union[PathLike, str]] = "config.toml",
+    def from_config(cls,
+                  file: Optional[Union[PathLike, str]] = "config.toml",
                   **kwargs):
         """
         Initializes a new session
-        :param config_file: The name of the configuration file to load
+        :param file: The name of the configuration file to load
         """
         # Parse all config files and parameters.
         config = {}
         # Find and load the general config. Merge it with config
-        config, config_path = SparkConnect._merge_configs(config, config_file)
+        config_file, config_path = SparkConnect._load_config(file)
+        # Merge in config_file to the config
+        config = SparkConnect._merge_config_dicts(config, config_file)
         # Merge in any kwargs to the config
         config = SparkConnect._merge_config_dicts(config, kwargs)
 
@@ -133,25 +135,30 @@ class SparkConnect:
     def get_dbutils(self):
         """ Gets dbutils """
         return self.dbutils
-
+    
     @staticmethod
-    def _merge_configs(current: Mapping, file: Union[PathLike, str]) -> Tuple[Mapping, Optional[PathLike]]:
+    def _load_config(filename: str) -> Tuple[Mapping, PathLike]:
         """
-        Finds the path of the configuration file and merges it with the current configuration.
-        If the file is None, then the current configuration is returned.
+        Loads a configuration file from a TOML or JSON file.
 
-        :param current: The current configuration dictionary
-        :param file: Filename or path to the configuration file
-        :return: A merged version of the `current` and `file`, as well as the path to the configuration file
+        :param filename: Filename or path to the configuration file
+        :return: A dictionary containing the configuration
         """
-        if file is not None:
-            config_path = SparkConnect._find_config_path(file)
-            if config_path is None:
-                raise FileNotFoundError(f"Could not find configuration file '{file}'")
-            else:
-                return SparkConnect._merge_config_dicts(current, toml.load(config_path)), config_path
-        else:
-            return current, None
+        if filename is None:
+            raise ValueError("No configuration file was specified")
+        
+        config_path = SparkConnect._find_config_path(filename)
+        if config_path is None:
+            raise FileNotFoundError(f"Could not find configuration file '{filename}'")
+        
+        # Load the configuration file
+        if filename.endswith(".json"):
+            with open(config_path, "r") as json_file:
+                config_file = json.load(json_file)
+        elif filename.endswith(".toml"):
+            config_file = toml.load(config_path)
+
+        return config_file, config_path
 
     @staticmethod
     def _find_config_path(file: Union[PathLike, str]) -> Optional[PathLike]:
@@ -200,4 +207,15 @@ class SparkConnect:
                     current[key] = value
             else:
                 current[key] = value
+
         return current
+    
+
+def main():
+
+    connections = SparkConnect.from_config("config.json")
+    print(connections.__dict__)
+
+
+if __name__ == "__main__":
+    main()
