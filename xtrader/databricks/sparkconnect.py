@@ -210,12 +210,3 @@ class SparkConnect:
 
         return current
     
-
-def main():
-
-    connections = SparkConnect.from_config("config.json")
-    print(connections.__dict__)
-
-
-if __name__ == "__main__":
-    main()
