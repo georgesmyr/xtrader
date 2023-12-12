@@ -8,36 +8,64 @@ from typing import Union, Optional, Tuple
 from os import PathLike
 
 
-class Session:
+class SparkConnect:
 
-    def __init__(self,
-                 config_file: Optional[Union[PathLike, str]] = "config.toml",
+    def __init__(self, host: str,
+                 token: str,
+                 cluster_id: str,
+                 org_id: int,
+                 port: int = 15001,
+                 root_dir: Optional[str] = None,
                  **kwargs):
+        """
+        Initializes spark session from configuration parameters and key-word arguments.
+        :param host:
+        :param token:
+        :param cluster_id:
+        :param org_id:
+        :param port:
+        :param root_dir: ingestion layer
+        """
+        self._config = {"databricks_connect": {"host": host,
+                                               "token": token,
+                                               "cluster_id": cluster_id,
+                                               "org_id": org_id,
+                                               "port": port},
+                        "root_dir": root_dir
+                        }
+        # Merge any kwargs to config
+        self._config = SparkConnect._merge_config_dicts(self._config, kwargs)
+        # Set spark session and dbutils to None
+        self._spark, self._dbutils = None, None
+
+    @classmethod
+    def from_toml(cls,
+                  config_file: Optional[Union[PathLike, str]] = "config.toml",
+                  **kwargs):
         """
         Initializes a new session
         :param config_file: The name of the configuration file to load
         """
         # Parse all config files and parameters.
-        self._config = {}
+        config = {}
         # Find and load the general config. Merge it with config
-        self._config, self._config_path = Session._merge_configs(self._config, config_file)
+        config, config_path = SparkConnect._merge_configs(config, config_file)
         # Merge in any kwargs to the config
-        self._config = Session._merge_config_dicts(self._config, kwargs)
+        config = SparkConnect._merge_config_dicts(config, kwargs)
 
-        # Read Databricks Connect configuration from json file if it exists
-        if "databricks_connect" in self._config and "config_file" in self._config["databricks_connect"]:
-            self._databricks_config_path = Path(self._config["databricks_connect"]["config_file"]).expanduser()
-            if self._databricks_config_path.exists():
-                with open(self._databricks_config_path, "r") as dbfile:
-                    self._config["databricks_connect"] = Session._merge_config_dicts(
-                        self._config["databricks_connect"], json.load(dbfile), overwrite=False,
+        # If the toml config file contains a location of Databricks-Connect json config file
+        if "databricks_connect" in config and "config_file" in config["databricks_connect"]:
+            databricks_config_path = Path(config["databricks_connect"]["config_file"]).expanduser()
+            if databricks_config_path.exists():
+                with open(databricks_config_path, "r") as dbfile:
+                    config["databricks_connect"] = SparkConnect._merge_config_dicts(
+                        config["databricks_connect"], json.load(dbfile), overwrite=False,
                     )
-        else:
-            self._databricks_config_path = None
 
-        # Initialize spark and dbutils to None
-        self._spark = None
-        self._dbutils = None
+        dbconnect_params = config["databricks_connect"]
+        kw_args = {key: value for key, value in config.items() if key != "databricks_connect"}
+
+        return cls(**dbconnect_params, **kw_args)
 
     def _init_spark(self) -> None:
         """
@@ -68,11 +96,11 @@ class Session:
                 .config(
                     "spark.databricks.service.port",
                     self._config["databricks_connect"]["port"],
-                )
+                ).getOrCreate()
             )
         else:
             raise ValueError("No active Spark session exists and no databricks connect configuration was present.")
-        
+
     @property
     def spark(self): #-> SparkSession
         """
@@ -82,7 +110,11 @@ class Session:
         if self._spark is None:
             self._init_spark()
         return self._spark
-    
+
+    def get_spark_session(self):
+        """ Returns spark session """
+        return self.spark
+
     def _init_dbutils(self) -> None:
         """ Initializes databricks utilities dbutils """
         from pyspark.dbutils import DBUtils
@@ -96,7 +128,11 @@ class Session:
         """
         if self._dbutils is None:
             self._init_dbutils()
-        return self._dbutils 
+        return self._dbutils
+
+    def get_dbutils(self):
+        """ Gets dbutils """
+        return self.dbutils
 
     @staticmethod
     def _merge_configs(current: Mapping, file: Union[PathLike, str]) -> Tuple[Mapping, Optional[PathLike]]:
@@ -109,11 +145,11 @@ class Session:
         :return: A merged version of the `current` and `file`, as well as the path to the configuration file
         """
         if file is not None:
-            config_path = Session._find_config_path(file)
+            config_path = SparkConnect._find_config_path(file)
             if config_path is None:
                 raise FileNotFoundError(f"Could not find configuration file '{file}'")
             else:
-                return Session._merge_config_dicts(current, toml.load(config_path)), config_path
+                return SparkConnect._merge_config_dicts(current, toml.load(config_path)), config_path
         else:
             return current, None
 
@@ -144,12 +180,12 @@ class Session:
                 if candidate_dir.exists():
                     return candidate_dir
             return None
-        
+
     @staticmethod
     def _merge_config_dicts(current: Mapping, update: Mapping, overwrite: bool = True) -> Mapping:
         """
         Merges two dictionaries recursively. This will overwrite keys from 'update' to 'current' unless
-        the ovewrite parameter is set to False.
+        the overwrite parameter is set to False.
 
         :param current: The current configuration dictionary
         :param update: The update configuration dictionary
@@ -159,7 +195,7 @@ class Session:
         for key, value in update.items():
             if key in current:
                 if isinstance(current[key], Mapping) and isinstance(value, Mapping):
-                    current[key] = Session._merge_config_dicts(current[key], value)
+                    current[key] = SparkConnect._merge_config_dicts(current[key], value)
                 elif overwrite:
                     current[key] = value
             else:
@@ -168,10 +204,13 @@ class Session:
 
 
 def main():
-    s = Session(config_file=None, local_config_file=None, a=1, b=2, c=3)
-    print(s._config)
-    print(s._config_path)
-    print(s._local_config_path)
+    print("=============== CONNECTING TO SPARK FROM toml CONFIG FILE ===============")
+    spark_connect = SparkConnect.from_toml()
+    spark = spark_connect.get_spark_session()
 
-if __name__ == "__main__":
-    main()
+    print("======================== Listing files in workspace =======================")
+    dbutils = spark_connect.get_dbutils()
+    consumption_layer = 'abfss://pint-rdp-p-01@rdpp01dls2.dfs.core.windows.net/consumption_layer/export_zone/'
+    files = dbutils.fs.ls(consumption_layer)
+    for file in files:
+        print(file)
