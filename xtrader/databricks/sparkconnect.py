@@ -201,16 +201,3 @@ class SparkConnect:
             else:
                 current[key] = value
         return current
-
-
-def main():
-    print("=============== CONNECTING TO SPARK FROM toml CONFIG FILE ===============")
-    spark_connect = SparkConnect.from_toml()
-    spark = spark_connect.get_spark_session()
-
-    print("======================== Listing files in workspace =======================")
-    dbutils = spark_connect.get_dbutils()
-    consumption_layer = 'abfss://pint-rdp-p-01@rdpp01dls2.dfs.core.windows.net/consumption_layer/export_zone/'
-    files = dbutils.fs.ls(consumption_layer)
-    for file in files:
-        print(file)
