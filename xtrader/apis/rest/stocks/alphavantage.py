@@ -2,7 +2,7 @@ import requests
 from typing import Any, Optional
 
 from xtrader.utils import call_api
-from xtrader.apis.format import AV_OHLC_response_format
+from xtrader.apis.rest.format import AV_OHLC_response_format
 from xtrader.apis.stocks.base import BaseStockAPI
 
 BASE_URL = 'https://www.alphavantage.co/query?'
