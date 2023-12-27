@@ -1,3 +1,3 @@
-from xtrader.apis.news import alphavantage
+from xtrader.apis.rest.news import alphavantage
 
 __all__ = ['alphavantage']

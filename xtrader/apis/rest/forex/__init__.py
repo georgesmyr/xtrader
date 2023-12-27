@@ -1,3 +1,3 @@
-from xtrader.apis.forex import alphavantage
+from xtrader.apis.rest.forex import alphavantage
 
 __all__ = ['alphavantage']

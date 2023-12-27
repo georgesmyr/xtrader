@@ -1,3 +1,3 @@
-from xtrader.apis.crypto import alphavantage
+from xtrader.apis.rest.crypto import alphavantage
 
 __all__ = ['alphavantage']
