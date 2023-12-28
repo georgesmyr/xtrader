@@ -3,3 +3,4 @@ config.toml
 temp.py
 xtrader/.DS_Store
 /data
+**/.DS_Store
