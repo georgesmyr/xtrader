@@ -2,7 +2,7 @@ import pandas as pd
 from typing import Any
 
 from xtrader.apis.rest.crypto.base import BaseCryptoAPI
-from xtrader.utils import call_api
+from xtrader.apis.utils import call_api
 
 BASE_URL = 'https://www.alphavantage.co/query?'
 

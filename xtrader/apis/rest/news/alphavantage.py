@@ -2,7 +2,7 @@ import requests
 from typing import Optional
 from datetime import datetime
 
-from xtrader.utils import call_api
+from xtrader.apis.utils import call_api
 
 BASE_URL = 'https://www.alphavantage.co/query?'
 NEWS_SENTIMENT_SORT_OPTIONS = ['LATEST', 'RELEVANCE']

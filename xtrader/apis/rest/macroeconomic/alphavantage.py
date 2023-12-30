@@ -1,5 +1,5 @@
 from typing import Any, Union
-from xtrader.utils import call_api
+from xtrader.apis.utils import call_api
 
 
 BASE_URL = 'https://www.alphavantage.co/query?'

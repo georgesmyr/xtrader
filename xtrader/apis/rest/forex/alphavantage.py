@@ -1,7 +1,7 @@
 from typing import Optional, Any
 import pandas as pd
 
-from xtrader.utils import call_api
+from xtrader.apis.utils import call_api
 
 BASE_URL = 'https://www.alphavantage.co/query?'
 
