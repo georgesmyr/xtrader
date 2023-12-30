@@ -4,3 +4,4 @@ temp.py
 xtrader/.DS_Store
 /data
 **/.DS_Store
+**/__pycache__
