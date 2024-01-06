@@ -34,7 +34,7 @@ class AlphaVantageMacroAPI:
             raise ValueError(f'`interval` must be one of: {AQ_INTERVALS}')
         
         params = {'function': 'REAL_GDP', 'interval': interval, 'apikey': self.api_key}
-        return api_call(BASE_URL, params=params)
+        return call_api(BASE_URL, params=params)
     
 
     def get_real_gdp_per_capita(self, country: str = 'USA') -> Any:
@@ -43,7 +43,7 @@ class AlphaVantageMacroAPI:
             raise ValueError('AlphaVantageMacroAPI only supports USA for now.')
         
         params = {'function': 'REAL_GDP_PER_CAPITA', 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_treasury_yield(self, country: str = 'USA', interval='monthly', maturity='10year') -> Any:
@@ -61,7 +61,7 @@ class AlphaVantageMacroAPI:
         
         params = {'function': 'TREASURY_YIELD', 'interval': interval,
                   'maturity': maturity, 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_fed_funds_rate(self, interval: str = 'monthly') -> Union[Any, str]:
@@ -74,7 +74,7 @@ class AlphaVantageMacroAPI:
             raise ValueError(f'`interval` must be one of: {DWM_INTERVALS}')
 
         params = {'function': 'FEDERAL_FUNDS_RATE', 'interval': interval, 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_cpi(self, country: str = 'USA', interval: str = 'monthly') -> Any:
@@ -88,7 +88,7 @@ class AlphaVantageMacroAPI:
             raise ValueError(f'`interval` must be one of: {MS_INTERVALS}')
         
         params = {'function': 'CPI', 'interval': interval, 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_inflation(self, country: str = 'USA') -> Any:
@@ -97,7 +97,7 @@ class AlphaVantageMacroAPI:
             raise ValueError('AlphaVantageMacroAPI only supports USA for now.')
         
         params = {'function': 'INFLATION', 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_retail_sales(self, country='USA') -> Any:
@@ -106,7 +106,7 @@ class AlphaVantageMacroAPI:
             raise ValueError('AlphaVantageMacroAPI only supports USA for now.')
         
         params = {'function': 'RETAIL_SALES', 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_durables(self, country='USA') -> Any:
@@ -115,7 +115,7 @@ class AlphaVantageMacroAPI:
             raise ValueError('AlphaVantageMacroAPI only supports USA for now.')
         
         params = {'function': 'DURABLES', 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
 
 
     def get_unemployment(self, country='USA') -> Any:
@@ -127,7 +127,7 @@ class AlphaVantageMacroAPI:
             raise ValueError('AlphaVantageMacroAPI only supports USA for now.')
         
         params = {'function': 'UNEMPLOYMENT', 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
     
 
     def get_nonfarm_payroll(self, country='USA') -> Any:
@@ -140,5 +140,5 @@ class AlphaVantageMacroAPI:
             raise ValueError('AlphaVantageMacroAPI only supports USA for now.')
         
         params = {'function': 'NONFARM_PAYROLL', 'apikey': self.api_key}
-        return api_call(base_url=BASE_URL, params=params)
+        return call_api(base_url=BASE_URL, params=params)
         

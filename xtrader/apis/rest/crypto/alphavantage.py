@@ -71,3 +71,4 @@ class AlphaVantageCryptoAPI(BaseCryptoAPI):
         """
         params = {'function': 'DIGITAL_CURRENCY_MONTHLY', 'symbol': symbol, 'market': market, 'apikey': self.api_key}
         return call_api(base_url=BASE_URL, params=params)
+    

@@ -2,7 +2,7 @@ import pandas as pd
 from typing import Optional
 
 
-class SeasonalFactors(object):
+class Seasonal(object):
 
     def __init__(self, prices: Optional[pd.DataFrame] = None):
         """ Initializes the `Seasonal` factors class."""

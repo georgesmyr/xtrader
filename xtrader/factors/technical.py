@@ -10,7 +10,7 @@ from typing import List
 from xtrader.factors import utils
 
 
-class TechnicalFactors(object):
+class Technical(object):
 
 
     def __init__(self, prices: Optional[pd.DataFrame] = None):

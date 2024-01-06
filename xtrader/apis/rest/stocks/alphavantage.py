@@ -33,7 +33,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
         else:
             function = 'TIME_SERIES_DAILY'
         params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
-        response = call_api(base_url=BASE_URL, params=params).json()
+        response = call_api(base_url=BASE_URL, params=params)
         
         return AV_OHLC_response_format(response, 'Time Series (Daily)')
 
@@ -55,7 +55,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
         
         params = {'function': 'TIME_SERIES_INTRADAY', 'symbol': symbol, 'interval': interval, 'month': month,
                   'adjusted': adjusted, 'extended_hours': extended_hours, 'outputsize': outputsize, 'apikey': self.api_key}
-        response = call_api(base_url=BASE_URL, params=params).json()
+        response = call_api(base_url=BASE_URL, params=params)
         
         return AV_OHLC_response_format(response, f'Time Series ({interval})')  
 
@@ -74,7 +74,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
         else:
             function = 'TIME_SERIES_WEEKLY'
         params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
-        response = call_api(base_url=BASE_URL, params=params).json()
+        response = call_api(base_url=BASE_URL, params=params)
 
         return AV_OHLC_response_format(response, 'Weekly Time Series')
     
@@ -86,7 +86,7 @@ class AlphaVantageStockAPI(BaseStockAPI):
         else:
             function = 'TIME_SERIES_MONTHLY'
         params = {'function': function, 'symbol': symbol, 'apikey': self.api_key}
-        response = call_api(base_url=BASE_URL, params=params).json()
+        response = call_api(base_url=BASE_URL, params=params)
 
         return AV_OHLC_response_format(response, 'Monthly Time Series')
 

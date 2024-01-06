@@ -4,15 +4,15 @@ from typing import Optional
 from typing import List
 from typing import Union
 
-from xtrader.factors.returns import ReturnFactors
+from xtrader.factors.returns import Returns
 from xtrader.factors import utils
 from xtrader.utils import TIME_SYMBOLS
 
 
-class MomentumFactors(object):
+class Momenta(object):
 
     def __init__(self, prices: Optional[pd.DataFrame]):
-        """ Initializes the `MomentumFactors` class."""
+        """ Initializes the `Momenta` class."""
         self.prices = prices
 
     @staticmethod
@@ -30,11 +30,11 @@ class MomentumFactors(object):
         for column in columns:
             # If return_1 is not in prices, calculate it
             if not f"{column}_return_1{freq}" in prices.columns:
-                prices[f"{column}_return_1{freq}"] = ReturnFactors.returns(prices, [1], freq, [column], normalize, dropna, return_full=False)[f"{column}_return_1{freq}"]
+                prices[f"{column}_return_1{freq}"] = Returns.returns(prices, [1], freq, [column], normalize, dropna, return_full=False)[f"{column}_return_1{freq}"]
             
             for period in periods:
                 if not f"column_return_{period}{freq}" in prices.columns:
-                    prices[f"{column}_return_{period}{freq}"] = ReturnFactors.returns(prices, [period], freq, [column],
+                    prices[f"{column}_return_{period}{freq}"] = Returns.returns(prices, [period], freq, [column],
                                                                             normalize, dropna, return_full=False)[f"{column}_return_{period}{freq}"]
 
                 prices[f"{column}_momentum_{period}{freq}"] = prices[f"{column}_return_{period}{freq}"].sub(prices[f"{column}_return_1{freq}"])
@@ -61,16 +61,16 @@ class MomentumFactors(object):
     def hourly(prices: pd.DataFrame, periods: List[int], columns: Optional[List[str]] = None,
                normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates hourly momenta from hourly prices."""
-        return MomentumFactors.momenta(prices, periods, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
+        return Momenta.momenta(prices, periods, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def daily(prices: pd.DataFrame, periods: List[int], columns: Optional[List[str]] = None,
               normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates daily momenta from daily prices."""
-        return MomentumFactors.momenta(prices, periods, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
+        return Momenta.momenta(prices, periods, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def monthly(prices: pd.DataFrame, periods: List[int], columns: Optional[List[str]] = None,
                 normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates monthly momenta from monthly prices."""
-        return MomentumFactors.momenta(prices, periods, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)
+        return Momenta.momenta(prices, periods, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)

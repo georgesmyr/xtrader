@@ -8,10 +8,10 @@ from xtrader.factors import utils
 from xtrader.utils import TIME_SYMBOLS
 
 
-class ReturnFactors(object):
+class Returns(object):
 
     def __init__(self, prices: Optional[pd.DataFrame] = None):
-        """ Initializes the `ReturnFactors` class."""
+        """ Initializes the `Returns` class."""
         self.prices = prices.copy()
 
     def from_defaults(self):
@@ -56,19 +56,19 @@ class ReturnFactors(object):
     def hourly(prices: pd.DataFrame, periods: List[int], columns: Optional[List[str]] = None,
                normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates hourly lagged returns from hourly prices."""
-        return ReturnFactors.returns(prices, periods, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
+        return Returns.returns(prices, periods, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def daily(prices: pd.DataFrame, periods: List[int], columns: Optional[List[str]] = None,
              normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates daily lagged returns from daily prices."""
-        return ReturnFactors.returns(prices, periods, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
+        return Returns.returns(prices, periods, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def monthly(prices: pd.DataFrame, periods: List[int], columns: Optional[List[str]] = None,
                 normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates monthly lagged returns from monthly prices."""
-        return ReturnFactors.returns(prices, periods, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)
+        return Returns.returns(prices, periods, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def lagged_returns(prices: pd.DataFrame, lags: List[int], freq: str, columns: Optional[Union[str, List[str]]] = None,
@@ -91,7 +91,7 @@ class ReturnFactors(object):
         # For each column calculate the lagged returns for the lags that were specified
         for column in columns:
             if f"{column}_return_1{freq}" not in prices.columns:
-                prices[f'{column}_return_1{freq}'] = ReturnFactors.returns(prices, [1], freq,
+                prices[f'{column}_return_1{freq}'] = Returns.returns(prices, [1], freq,
                                                                             [column], normalize, dropna, False)[f'{column}_return_1{freq}']
             for lag in lags:
                 prices[f'{column}_return_1{freq}_lag_{lag}'] = prices[f'{column}_return_1{freq}'].shift(lag)
@@ -109,19 +109,19 @@ class ReturnFactors(object):
     def hourly_lagged(prices: pd.DataFrame, lags: List[int], columns: Optional[List[str]] = None,
                       normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates hourly lagged returns from hourly prices."""
-        return ReturnFactors.lagged_returns(prices, lags, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
+        return Returns.lagged_returns(prices, lags, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def daily_lagged(prices: pd.DataFrame, lags: List[int], columns: Optional[List[str]] = None,
                      normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates daily lagged returns from daily prices."""
-        return ReturnFactors.lagged_returns(prices, lags, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
+        return Returns.lagged_returns(prices, lags, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def monthly_lagged(prices: pd.DataFrame, lags: List[int], columns: Optional[List[str]] = None,
                        normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates monthly lagged returns from monthly prices."""
-        return ReturnFactors.lagged_returns(prices, lags, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)
+        return Returns.lagged_returns(prices, lags, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def forward_returns(prices: pd.DataFrame, lags: List[int],  freq: str, columns: Optional[Union[str, List[str]]] = None,
@@ -145,7 +145,7 @@ class ReturnFactors(object):
         for column in columns:
             for lag in lags:
                 if f"{column}_return_{lag}{freq}" not in prices.columns:
-                    prices[f'{column}_return_{lag}{freq}'] = ReturnFactors.returns(prices, [lag], freq, [column], normalize, dropna, False)[f'{column}_return_{lag}{freq}']
+                    prices[f'{column}_return_{lag}{freq}'] = Returns.returns(prices, [lag], freq, [column], normalize, dropna, False)[f'{column}_return_{lag}{freq}']
             
             for lag in lags:
                 prices[f"{column}_target_{lag}{freq}"] = prices[f"{column}_return_{lag}{freq}"].shift(-lag)
@@ -163,17 +163,17 @@ class ReturnFactors(object):
     def hourly_forward(prices: pd.DataFrame, lags: List[int], columns: Optional[List[str]] = None,
                        normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates hourly forward returns from hourly prices."""
-        return ReturnFactors.forward_returns(prices, lags, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
+        return Returns.forward_returns(prices, lags, TIME_SYMBOLS["hour"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def daily_forward(prices: pd.DataFrame, lags: List[int], columns: Optional[List[str]] = None,
                       normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates daily forward returns from daily prices."""
-        return ReturnFactors.forward_returns(prices, lags, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
+        return Returns.forward_returns(prices, lags, TIME_SYMBOLS["day"], columns, normalize, dropna, return_full)
 
     @staticmethod
     def monthly_forward(prices: pd.DataFrame, lags: List[int], columns: Optional[List[str]] = None,
                         normalize: bool = True, dropna: bool = False, return_full: bool = True) -> pd.DataFrame:
         """ Calculates monthly forward returns from monthly prices."""
-        return ReturnFactors.forward_returns(prices, lags, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)
+        return Returns.forward_returns(prices, lags, TIME_SYMBOLS["month"], columns, normalize, dropna, return_full)
     
